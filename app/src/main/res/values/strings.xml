@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Gapstars-temper-assessment</string>
+
+    <string name="subscribe">Schrijf je in</string>
+    <string name="login">Inloggen</string>
+    <string name="filter">Filters</string>
+
+
+    <!--errors-->
+    <string name="no_network_connection">Network Connection Failed. Please check your internet connection.</string>
+    <string name="generic_error_message">Something went wrong!.</string>
+    <string name="bad_request_error">Bad Request.</string>
+    <string name="internal_error_message">Internal Error.</string>
+
+    <string name="location_permission_denied_warning">Location permission is required for some features of the application to work properly. Please consider granting permission</string>
+    <string name="grant_permission_button">Grant Permission</string>
+
+</resources>
