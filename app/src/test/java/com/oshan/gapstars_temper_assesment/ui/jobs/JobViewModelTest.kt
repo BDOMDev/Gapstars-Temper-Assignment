@@ -1,10 +1,12 @@
 package com.oshan.gapstars_temper_assesment.ui.jobs
 
+import android.text.format.DateUtils
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.oshan.gapstars_temper_assesment.models.Job
 import com.oshan.gapstars_temper_assesment.service.repository.JobsRepo
 import com.oshan.gapstars_temper_assesment.testUtils.getOrAwaitValue
+import com.oshan.gapstars_temper_assesment.utils.Utils
 import io.reactivex.Single
 import org.junit.*
 import org.junit.runner.RunWith
@@ -33,34 +35,34 @@ class JobViewModelTest {
         jobsRepo = Mockito.mock(JobsRepo::class.java)
 
         viewModel = JobViewModel(jobsRepo)
-
-      //  viewModel.setLoading(false)
     }
 
     @Test
     fun `get jobs data, empty data list makes livedata empty`() {
-        Mockito.`when`(jobsRepo.getJobsData()).thenReturn(Single.just(ArrayList<Job>()))
+        val currentDate = Utils.getCurrentDateAsString("yyyy-MM-dd")
+        Mockito.`when`(jobsRepo.getJobsData(currentDate)).thenReturn(Single.just(ArrayList<Job>()))
 
-        viewModel.getJobsData()
+        viewModel.getJobsData(currentDate)
 
         assertThat(viewModel.jobDataStateObservable.getOrAwaitValue()).isEmpty()
     }
 
     @Test
     fun `get jobs data, not empty data list, live data should be not empty`() {
+        val currentDate = Utils.getCurrentDateAsString("yyyy-MM-dd")
+        Mockito.`when`(jobsRepo.getJobsData(currentDate)).thenReturn(Single.just(getSampleJobs()))
 
-        Mockito.`when`(jobsRepo.getJobsData()).thenReturn(Single.just(getSampleJobs()))
-
-        viewModel.getJobsData()
+        viewModel.getJobsData(currentDate)
 
         assertThat(viewModel.jobDataStateObservable.getOrAwaitValue()).isNotEmpty()
     }
 
     @Test
     fun `get jobs data should make loading state live data false`() {
-        Mockito.`when`(jobsRepo.getJobsData()).thenReturn(Single.just(getSampleJobs()))
+        val currentDate = Utils.getCurrentDateAsString("yyyy-MM-dd")
+        Mockito.`when`(jobsRepo.getJobsData(currentDate)).thenReturn(Single.just(getSampleJobs()))
 
-        viewModel.getJobsData()
+        viewModel.getJobsData(currentDate)
 
         viewModel.jobDataStateObservable.getOrAwaitValue()
 
@@ -69,10 +71,10 @@ class JobViewModelTest {
 
     @Test
     fun `get jobs data error state live data must be not empty when thrown exception`() {
+        val currentDate = Utils.getCurrentDateAsString("yyyy-MM-dd")
+        Mockito.`when`(jobsRepo.getJobsData(currentDate)).thenReturn(Single.error(Throwable()))
 
-        Mockito.`when`(jobsRepo.getJobsData()).thenReturn(Single.error(Throwable()))
-
-        viewModel.getJobsData()
+        viewModel.getJobsData(currentDate)
 
         val exception = viewModel.errorStateObservable.getOrAwaitValue()
 
